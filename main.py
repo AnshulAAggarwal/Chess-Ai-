@@ -9,18 +9,22 @@ MAX_Fps = 69
 IMAGES = {}
 
 
+# initialize a global dictionary - it will be called once to make the board
 def loadImages():
-    pieces = ['wp', 'bp', 'wR', 'bR', 'wK', 'bK', 'wB', 'bB', 'wQ', 'bQ', 'wK', 'bK']
+    pieces = ['wp', 'bp', 'wR', 'bR', 'wN', 'bN', 'wB', 'bB', 'wQ', 'bQ', 'wK', 'bK']
     for piece in pieces:
         IMAGES[piece] = game.transform.scale(game.image.load("images/" + piece + ".png"), (SQ_SIZE, SQ_SIZE))
 
 
+# handles use cases
 def main():
     game.init()
     screen = game.display.set_mode((WIDTH, HEIGHT))
     clock = game.time.Clock()
     screen.fill(game.Color("white"))
     gs = ChessEngine.ChessState()
+    validMoves = gs.get_Valid_Moves()
+    moveMade = False
     print(gs.board)
     loadImages()
     running = True
@@ -31,6 +35,7 @@ def main():
         for i in game.event.get():
             if i.type == game.QUIT:
                 running = False
+            # mouse handler
             elif i.type == game.MOUSEBUTTONDOWN:
                 location = game.mouse.get_pos()  # x,y location of the mouse
                 col = location[0] // SQ_SIZE
@@ -44,9 +49,21 @@ def main():
                 if len(playerClicks) == 2:  # a move has been made
                     move = ChessEngine.move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.get_chess_notation())
-                    gs.make_move(move)
-                    squareSelected=() #reset user clicks to play along
-                    playerClicks =[]
+                    if move in validMoves:
+                        gs.make_move(move)
+                        moveMade = True
+
+                    squareSelected = ()  # reset user clicks to play along
+                    playerClicks = []
+
+            # key_handlers
+            elif i.type == game.KEYDOWN:
+                if i.key == game.K_z:
+                    gs.undo_move()
+                    moveMade = True
+        if moveMade:
+            validMoves = gs.get_Valid_Moves()
+            moveMade = False
 
         drawGameState(screen, gs)
         clock.tick(MAX_Fps)
