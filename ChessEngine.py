@@ -5,7 +5,7 @@ class ChessState():
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "wQ", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
@@ -72,6 +72,7 @@ class ChessState():
             if c - 1 >= 0 and self.board[r + 1][c - 1][0] == "w":
                 moves.append(move((r, c), (r + 1, c - 1), self.board))
                 # get that Rook's Moves
+        #add pawn promotions
 
     def getKingMoves(self, r, c, moves):
         if self.whitemove:
@@ -93,11 +94,11 @@ class ChessState():
             if (r + 1 < 8 and c - 1 >= 0) and (self.board[r + 1][c - 1] == "--" or self.board[r + 1][c - 1][0] == "b"):
                 moves.append(move((r, c), (r + 1, c - 1), self.board))
 
-            if (r + 1 < 8 and c ) and (self.board[r + 1][c ] == "--" or self.board[r + 1][c ][0] == "b"):
-                moves.append(move((r, c), (r + 1, c ), self.board))
+            if (r + 1 < 8 and c) and (self.board[r + 1][c] == "--" or self.board[r + 1][c][0] == "b"):
+                moves.append(move((r, c), (r + 1, c), self.board))
 
-            if (r + 1 < 8 and c + 1 <8) and (self.board[r +1][c + 1] == "--" or self.board[r +1][c +1][0] == "b"):
-                moves.append(move((r, c), (r + 1, c +1), self.board))
+            if (r + 1 < 8 and c + 1 < 8) and (self.board[r + 1][c + 1] == "--" or self.board[r + 1][c + 1][0] == "b"):
+                moves.append(move((r, c), (r + 1, c + 1), self.board))
         else:
             if (r - 1 >= 0 and c - 1 >= 0) and (self.board[r - 1][c - 1] == "--" or self.board[r - 1][c - 1][0] == "w"):
                 moves.append(move((r, c), (r - 1, c - 1), self.board))
@@ -117,11 +118,11 @@ class ChessState():
             if (r + 1 < 8 and c - 1 >= 0) and (self.board[r + 1][c - 1] == "--" or self.board[r + 1][c - 1][0] == "w"):
                 moves.append(move((r, c), (r + 1, c - 1), self.board))
 
-            if (r + 1 < 8 and c ) and (self.board[r + 1][c ] == "--" or self.board[r + 1][c ][0] == "w"):
-                moves.append(move((r, c), (r + 1, c ), self.board))
+            if (r + 1 < 8 and c) and (self.board[r + 1][c] == "--" or self.board[r + 1][c][0] == "w"):
+                moves.append(move((r, c), (r + 1, c), self.board))
 
-            if (r + 1 < 8 and c + 1 <8) and (self.board[r +1][c + 1] == "--" or self.board[r +1][c +1][0] == "w"):
-                moves.append(move((r, c), (r + 1, c +1), self.board))
+            if (r + 1 < 8 and c + 1 < 8) and (self.board[r + 1][c + 1] == "--" or self.board[r + 1][c + 1][0] == "w"):
+                moves.append(move((r, c), (r + 1, c + 1), self.board))
 
     def getRookMoves(self, r, c, moves):
         if self.whitemove:
@@ -362,188 +363,8 @@ class ChessState():
                 moves.append(move((r, c), (r - 2, c - 1), self.board))
 
     def getQueenMoves(self, r, c, moves):
-        if self.whitemove:
-            i = r
-            j = c + 1
-            while (j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    j = j + 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            j = c - 1
-            while (j > -1):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    j = j - 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c
-            while (i > -1):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            while (i < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c + 1
-            while (i >= 0 and j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                    j = j + 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            j = c + 1
-            while (i < 8 and j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                    j = j + 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c - 1
-            while (i > -1 and j >= 0):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                    j = j - 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            j = c - 1
-            while (i < 8 and j >= 0):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                    j = j - 1
-                elif self.board[i][j][0] == "b":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-        else:
-            i = r
-            j = c + 1
-            while (j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    j = j + 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            j = c - 1
-            while (j > -1):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    j = j - 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c
-            while (i > -1):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            while (i < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c + 1
-            while (i >= 0 and j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                    j = j + 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            j = c + 1
-            while (i < 8 and j < 8):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                    j = j + 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r - 1
-            j = c - 1
-            while (i > -1 and j >= 0):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i - 1
-                    j = j - 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
-            i = r + 1
-            j = c - 1
-            while (i < 8 and j >= 0):
-                if self.board[i][j] == "--":
-                    moves.append(move((r, c), (i, j), self.board))
-                    i = i + 1
-                    j = j - 1
-                elif self.board[i][j][0] == "w":
-                    moves.append(move((r, c), (i, j), self.board))
-                    break
-                else:
-                    break
+        self.getRookMoves(r,c,moves)
+        self.getBishopMoves(r,c,moves)
 
 
 class move():

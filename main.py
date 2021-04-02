@@ -52,9 +52,10 @@ def main():
                     if move in validMoves:
                         gs.make_move(move)
                         moveMade = True
-
-                    squareSelected = ()  # reset user clicks to play along
-                    playerClicks = []
+                        squareSelected = ()  # reset user clicks to play along
+                        playerClicks = []
+                    else:
+                        playerClicks=[squareSelected]
 
             # key_handlers
             elif i.type == game.KEYDOWN:
