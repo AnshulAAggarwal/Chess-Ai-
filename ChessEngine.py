@@ -10,11 +10,15 @@ class ChessState():
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
         ]
-        self.whitemove = True
-        self.movelog = []
         self.moveFunctions = {'p': self.getPawnMoves, 'R': self.getRookMoves, 'B': self.getBishopMoves,
                               'N': self.getKnightMoves, 'Q': self.getQueenMoves, 'K': self.getKingMoves
                               }
+        self.whitemove = True
+        self.movelog = []
+        self.white_King_Location = (7, 4)
+        self.black_King_Location = (0, 4)
+        self.checkMate = False
+        self.stalemate = False
 
     # this does not work for enpassant castle and pawn promotion
     def make_move(self, move):
@@ -22,6 +26,14 @@ class ChessState():
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.movelog.append(move)
         self.whitemove = not self.whitemove
+
+        # update white king location
+        if move.piece_moved == "wk":
+            self.white_King_Location = (move.end_row, move.end_col)
+
+        # update black king location
+        elif move.piece_moved == "bk":
+            self.black_King_Location = (move.end_row, move.end_col)
 
     # undo the last move
 
@@ -32,13 +44,60 @@ class ChessState():
             self.board[move.end_row][move.end_col] = move.piece_captured
             self.whitemove = not self.whitemove
 
+            # update white king location
+            if move.piece_moved == "wk":
+                self.white_King_Location = (move.start_row, move.start_col)
+
+            # update black king location
+            elif move.piece_moved == "bk":
+                self.black_King_Location = (move.start_row, move.start_col)
+
     # moves considering check
     def get_Valid_Moves(self):
-        return self.all_moves()
+        # 1. generate all  moves
+        moves = self.all_moves()
+
+        # 2. for each move , make the move
+        for i in range(len(moves) - 1, -1, -1):
+            self.make_move(moves[i])
+            # we are switching it back because make move switches the move
+            self.whitemove = not self.whitemove
+            # 3. for all of moves generate ur oppenent's moves
+            # 4. see which of those moves attack ur king
+            if self.in_check():
+                moves.remove(moves[i])
+            self.whitemove = not self.whitemove
+            self.undo_move()
+        if len(moves) == 0:
+            if self.in_check():
+                self.checkMate = True
+            else:
+                self.stalemate = True
+        else:
+            self.checkMate = False
+            self.stalemate = False
+        # 5. remove the moves which attack our king
+        return moves
 
     # moves without considering checks
     # basically this method will provide all the possibles moves and get_Valid_Moves
     # will filter out the one which put the king is check
+
+    def in_check(self):
+        if self.whitemove:
+            return self.square_under_attack(self.white_King_Location[0], self.white_King_Location[1])
+        else:
+            return self.square_under_attack(self.black_King_Location[0], self.black_King_Location[1])
+
+    # check this piece at r,c is under attack
+    def square_under_attack(self, r, c):
+        self.whitemove = not self.whitemove  # switch to enemy
+        oppmoves = self.all_moves()
+        self.whitemove = not self.whitemove
+        for move in oppmoves:
+            if move.end_row == r and move.end_col == c:
+                return True
+        return False
 
     def all_moves(self):
         moves = []
@@ -72,7 +131,7 @@ class ChessState():
             if c - 1 >= 0 and self.board[r + 1][c - 1][0] == "w":
                 moves.append(move((r, c), (r + 1, c - 1), self.board))
                 # get that Rook's Moves
-        #add pawn promotions
+        # add pawn promotions
 
     def getKingMoves(self, r, c, moves):
         if self.whitemove:
@@ -363,8 +422,8 @@ class ChessState():
                 moves.append(move((r, c), (r - 2, c - 1), self.board))
 
     def getQueenMoves(self, r, c, moves):
-        self.getRookMoves(r,c,moves)
-        self.getBishopMoves(r,c,moves)
+        self.getRookMoves(r, c, moves)
+        self.getBishopMoves(r, c, moves)
 
 
 class move():

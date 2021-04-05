@@ -8,6 +8,7 @@ SQ_SIZE = HEIGHT // DIMENSION
 MAX_Fps = 69
 IMAGES = {}
 
+#TODO the code lets you make bad king moves undercheck , lets hope the advanced algo makes us stop - if not we might have to format our move functions
 
 # initialize a global dictionary - it will be called once to make the board
 def loadImages():
