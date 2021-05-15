@@ -49,7 +49,7 @@ def main():
     square_selected = ()  # no square is selected initially, this will keep track of the last click of the user (tuple(row,col))
     player_clicks = []  # this will keep track of player clicks (two tuples)
     game_over = False
-    playerOne = True #if human is playing white, then it is true
+    playerOne = False #if human is playing white, then it is true
     playerTwo = False #same for black
 
     while running:
