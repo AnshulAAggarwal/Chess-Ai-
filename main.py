@@ -49,7 +49,7 @@ def main():
     square_selected = ()  # no square is selected initially, this will keep track of the last click of the user (tuple(row,col))
     player_clicks = []  # this will keep track of player clicks (two tuples)
     game_over = False
-    playerOne = False #if human is playing white, then it is true
+    playerOne = True #if human is playing white, then it is true
     playerTwo = False #same for black
 
     while running:
@@ -101,7 +101,9 @@ def main():
 
         #AI move finder
         if not game_over and not humanTurn:
-            AImove= MoveFinder.FindRandomMove(valid_moves)
+            AImove= MoveFinder.FindBestMove(game_state,valid_moves)
+            if AImove is None:
+                AImove = MoveFinder.FindRandomMove(valid_moves)
             game_state.makeMove(AImove)
             move_made = True
             animate = True
