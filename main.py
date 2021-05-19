@@ -101,7 +101,7 @@ def main():
 
         #AI move finder
         if not game_over and not humanTurn:
-            AImove= MoveFinder.FindBestMove(game_state,valid_moves)
+            AImove= MoveFinder.FindBestMoveMinMax(game_state,valid_moves)
             if AImove is None:
                 AImove = MoveFinder.FindRandomMove(valid_moves)
             game_state.makeMove(AImove)
