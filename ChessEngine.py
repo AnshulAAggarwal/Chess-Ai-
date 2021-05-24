@@ -491,7 +491,7 @@ class GameState():
         for i in range(8):
             end_row = row + row_moves[i]
             end_col = col + col_moves[i]
-            print(end_row, end_col)
+          #  print(end_row, end_col)
             if 0 <= end_row <= 7 and 0 <= end_col <= 7:
                 end_piece = self.board[end_row][end_col]
                 if end_piece[0] != ally_color:  # not an ally piece - empty or enemy

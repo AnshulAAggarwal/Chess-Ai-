@@ -105,6 +105,7 @@ def main():
             if AImove is None:
                 AImove = MoveFinder.FindRandomMove(valid_moves)
             game_state.makeMove(AImove)
+            print(AImove.getChessNotation())
             move_made = True
             animate = True
 
