@@ -34,6 +34,7 @@ class GameState():
         self.pins = []
         self.checks = []
         self.enpassant_possible = ()  # coordinates for the square where en passsant capture is possible
+        self.enpassantPossibleLog= [self.enpassant_possible]
         self.current_castling_rights = CastleRights(True, True, True, True)
         self.castle_rights_log = [CastleRights(self.current_castling_rights.wks, self.current_castling_rights.bks,
                                                self.current_castling_rights.wqs, self.current_castling_rights.bqs)]
@@ -55,7 +56,7 @@ class GameState():
 
         # pawn promotion
         if move.is_pawn_promotion:
-            promoted_piece = input("Promote to Q, R, B, or N:")  # take this to UI later
+            promoted_piece = 'Q' #input("Promote to Q, R, B, or N:")  # take this to UI later
             self.board[move.end_row][move.end_col] = move.piece_moved[0] + promoted_piece
 
         # enpassant move
@@ -79,6 +80,8 @@ class GameState():
                     move.end_col - 2]  # moves the rook to its new square
                 self.board[move.end_row][move.end_col - 2] = '--'  # erease old rook
 
+
+        self.enpassantPossibleLog.append(self.enpassant_possible)
         # update castling rights - whenever it is a rook or king move
         self.updateCastleRights(move)
         self.castle_rights_log.append(CastleRights(self.current_castling_rights.wks, self.current_castling_rights.bks,
@@ -102,10 +105,13 @@ class GameState():
             if move.is_enpassant_move:
                 self.board[move.end_row][move.end_col] = "--"  # leave landing square blank
                 self.board[move.start_row][move.end_col] = move.piece_captured
-                self.enpassant_possible = (move.end_row, move.end_col)
+              #  self.enpassant_possible = (move.end_row, move.end_col)
             # undo a 2 square pawn advance
-            if move.piece_moved[1] == "p" and abs(move.start_row - move.end_row) == 2:
-                self.enpassant_possible = ()
+          #  if move.piece_moved[1] == "p" and abs(move.start_row - move.end_row) == 2:
+           #     self.enpassant_possible = ()
+
+            self.enpassantPossibleLog.pop()
+            self.enpassant_possible=self.enpassantPossibleLog[-1]
             # undo castle rights
             self.castle_rights_log.pop()  # get rid of the new castle rights from the move we are undoing
             self.current_castling_rights = self.castle_rights_log[
@@ -126,6 +132,7 @@ class GameState():
         '''
         Update the castle rights given the move
         '''
+        #if rook is captured
         if move.piece_captured == "wR":
             if move.end_col == 0:  # left rook
                 self.current_castling_rights.wqs = False
@@ -137,6 +144,8 @@ class GameState():
             elif move.end_col == 7:  # right rook
                 self.current_castling_rights.bks = False
 
+
+        #if kings are moved
         if move.piece_moved == 'wK':
             self.current_castling_rights.wqs = False
             self.current_castling_rights.wks = False
@@ -585,3 +594,7 @@ class Move():
 
     def getRankFile(self, row, col):
         return self.cols_to_files[col] + self.rows_to_ranks[row]
+
+    def __str__(self):
+        if self.caste:
+            return "O-O" if self.end_col==6 else "O-O-O"
