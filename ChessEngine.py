@@ -4,6 +4,8 @@ Determining valid moves at current state.
 It will keep move log.
 '''
 
+def implement():
+ pass
 
 class GameState():
     def __init__(self):
